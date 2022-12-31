@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,27 +17,43 @@ func init() {
 }
 
 var (
+	userArg      string
 	wrdNumber    int
 	passNumber   int
-	specialChars = [7]string{"@", "#", "$", "%", "^", "&", "*"}
+	min          int = 2
+	max          int = 10
+	specialChars     = [7]string{"@", "#", "$", "%", "^", "&", "*"}
+	password     string
 )
 
-func main() {
-	wrdNumber = rand.Intn(10)
-	if wrdNumber == 0 {
+func inputChecker() {
+	wrdNumber = rand.Intn((max - min + 1) + min)
+	if wrdNumber <= 2 {
 		wrdNumber += rand.Intn(10)
 		return
 	}
-	userInput()
+
+	if len(os.Args) == 1 {
+		userInput()
+	} else if len(os.Args) == 2 {
+		userArg = os.Args[1]
+		userNumbers, err := strconv.Atoi(userArg)
+		if err == nil {
+			wordGenerator(userNumbers, wrdNumber)
+		}
+	} else {
+		log.Fatal("ERROR: You need either 0 or 1 arguments")
+	}
 }
 
-func wordGenerator(wordNumber int, passwdNumber int) {
+func wordGenerator(passwdNumber int, wordNumber int) {
 	for loop := 0; loop < passwdNumber; loop++ {
 		list, err := diceware.Generate(wordNumber)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(strings.Join(list, specialChars[rand.Intn(7)]))
+		password = strings.Join(list, specialChars[rand.Intn(7)])
+		println(password)
 	}
 }
 
@@ -46,5 +64,9 @@ func userInput() {
 		log.Fatal(err)
 		return
 	}
-	wordGenerator(wrdNumber, passNumber)
+	wordGenerator(passNumber, wrdNumber)
+}
+
+func main() {
+	inputChecker()
 }
