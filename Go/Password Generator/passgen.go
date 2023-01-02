@@ -7,39 +7,43 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/sethvargo/go-diceware/diceware"
 )
 
-func init() {
-	rand.Seed(time.Now().UTC().UnixNano())
-}
-
 var (
+	_wrdNumber   int
 	userArg      string
-	wrdNumber    int
 	passNumber   int
-	min          int = 2
-	max          int = 10
-	specialChars     = [7]string{"@", "#", "$", "%", "^", "&", "*"}
+	specialChars = [7]string{"@", "#", "$", "%", "^", "&", "*"}
+	specialNumbs = [7]string{"2", "3", "4", "5", "6", "7", "8"}
 	password     string
 )
 
-func inputChecker() {
-	wrdNumber = rand.Intn((max - min + 1) + min)
-	if wrdNumber <= 2 {
-		wrdNumber += rand.Intn(10)
-		return
-	}
+type IntRange struct {
+	min, max int
+}
 
+func (wrdNumber *IntRange) NextRandom(r *rand.Rand) int {
+	return r.Intn(wrdNumber.max-wrdNumber.min+1) + wrdNumber.min
+}
+
+func randomNumber(_userNumbers int) {
+	r := rand.New(rand.NewSource(10))
+	wrdNumber := IntRange{1, 5}
+	_wrdNumber = wrdNumber.NextRandom(r)
+	wordGenerator(_userNumbers, _wrdNumber)
+}
+
+func inputChecker() {
 	if len(os.Args) == 1 {
 		userInput()
 	} else if len(os.Args) == 2 {
+
 		userArg = os.Args[1]
 		userNumbers, err := strconv.Atoi(userArg)
 		if err == nil {
-			wordGenerator(userNumbers, wrdNumber)
+			randomNumber(userNumbers)
 		}
 	} else {
 		log.Fatal("ERROR: You need either 0 or 1 arguments")
@@ -52,19 +56,20 @@ func wordGenerator(passwdNumber int, wordNumber int) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		password = strings.Join(list, specialChars[rand.Intn(7)])
-		println(password)
+		password = strings.Join(list, specialChars[rand.Intn(7)]+specialNumbs[rand.Intn(7)])
+		fmt.Println(password)
+
 	}
 }
 
 func userInput() {
-	fmt.Println("How many passwords do you need? ")
+	fmt.Println("How many passwords do you need?")
 	_, err := fmt.Scan(&passNumber)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	wordGenerator(passNumber, wrdNumber)
+	randomNumber(passNumber)
 }
 
 func main() {
