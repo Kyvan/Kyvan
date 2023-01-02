@@ -15,8 +15,8 @@ var (
 	_wrdNumber   int
 	userArg      string
 	passNumber   int
-	specialChars = [7]string{"@", "#", "$", "%", "^", "&", "*"}
-	specialNumbs = [7]string{"2", "3", "4", "5", "6", "7", "8"}
+	specialChars = []string{"@", "#", "$", "%", "^", "&", "*"}
+	specialNumbs = []string{"2", "3", "4", "5", "6", "7", "8", "9", "69", "420"}
 	password     string
 )
 
@@ -56,7 +56,7 @@ func wordGenerator(passwdNumber int, wordNumber int) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		password = strings.Join(list, specialChars[rand.Intn(7)]+specialNumbs[rand.Intnpa(7)])
+		password = strings.Join(list, specialChars[rand.Intn(len(specialChars))]+specialNumbs[rand.Intn(len(specialNumbs))])
 		fmt.Println(password)
 
 	}
