@@ -56,7 +56,7 @@ func wordGenerator(passwdNumber int, wordNumber int) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		password = strings.Join(list, specialChars[rand.Intn(7)]+specialNumbs[rand.Intn(7)])
+		password = strings.Join(list, specialChars[rand.Intn(7)]+specialNumbs[rand.Intnpa(7)])
 		fmt.Println(password)
 
 	}
