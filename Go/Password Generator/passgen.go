@@ -15,7 +15,7 @@ var (
 	_wrdNumber   int
 	userArg      string
 	passNumber   int
-	specialChars = []string{"@", "#", "$", "%", "^", "&", "*"}
+	specialChars = []string{"@", "#", "$", "%", "^", "&", "*", "!", "-", "="}
 	specialNumbs = []string{"2", "3", "4", "5", "6", "7", "8", "9", "69", "420"}
 	password     string
 )
